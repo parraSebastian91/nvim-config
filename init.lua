@@ -15,25 +15,11 @@ local opt = vim.opt
 g.mapleader = " "
 
 require('lazy').setup({
-    -- {
-    --     'folke/tokyonight.nvim',
-    --     priority = 1000,
-    --     config = function()
-    --         require('tokyonight').setup({
-    --             styles = {functions = 'bold', keywords = 'italic'}
-    --         })
-    --         -- vim.cmd.colorscheme("tokyonight")
-    --         -- vim.cmd.colorscheme("tokyonight-day")
-    --     end
-    -- },
-    'mhartington/formatter.nvim', -- use 'neovim/nvim-lspconfig',
+    -- 'mhartington/formatter.nvim',
     {'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
     {
       "ibhagwan/fzf-lua",
-      -- optional for icon support
       dependencies = { "nvim-tree/nvim-web-devicons" },
-      -- or if using mini.icons/mini.nvim
-      -- dependencies = { "echasnovski/mini.icons" },
       opts = {
         keymap = {
           fzf = {
@@ -42,17 +28,18 @@ require('lazy').setup({
         },
       }
     },
-    'nvim-lua/plenary.nvim',
-    'github/copilot.vim',
+      {
+        "CopilotC-Nvim/CopilotChat.nvim",
+        dependencies = {
+          { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+          { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+        },
+        build = "make tiktoken", -- Only on MacOS or Linux
+        opts = {
+        },
+      },
     'nvim-lua/popup.nvim',
     'sindrets/diffview.nvim',
-    -- {
-    --     'echasnovski/mini.icons',
-    --     version = false,
-    --     config = function() require('mini.icons').setup() end
-    -- },
-    -- { 'echasnovski/mini.diff' },
-
     'lewis6991/gitsigns.nvim',
     { 'David-Kunz/jester', dev = true },
     {
@@ -62,10 +49,13 @@ require('lazy').setup({
             -- model = 'qwen2.5:14b',
             -- model = 'vanilj/phi-4-unsloth',
             -- model = 'deepseek-r1:14b',
-            model = 'mistral-small',
+            -- model = 'mistral-small',
+            -- model = 'gemma3:12b',
+            -- model = 'gemma3:27b-it-qat',
+            model = 'qwen3:30b-a3b',
+            preview = true,
             -- file = true,
             -- hidden = true
-            -- display_mode = "split",
             -- no_auto_close = true
             -- model = 'wizardlm2',
             -- model = 'dolphin-mixtral:8x7b-v2.5-q3_K_S',
@@ -73,45 +63,22 @@ require('lazy').setup({
             -- show_model = true,
             -- show_prompt = true,
             -- start_up = function() print('start up') end,
-            -- display_mode = 'vsplit',
+            -- display_mode = 'no-split',
             -- debug = true
         }
     },
-    -- {'David-Kunz/markid', dev = true},
-    -- 'David-Kunz/spotlight',
-    -- {'nvim-tree/nvim-tree.lua', dependencies = {'nvim-tree/nvim-web-devicons'}},
-    -- {'echasnovski/mini.base16', version = '*'}
-    'David-Kunz/treesitter-unit', -- use 'David-Kunz/ts-quickfix',
-    -- 'hrsh7th/cmp-nvim-lsp', 'hrsh7th/cmp-buffer', 'hrsh7th/nvim-cmp',
-    -- 'David-Kunz/cmp-npm', 'marko-cerovac/material.nvim',
-    'mfussenegger/nvim-dap', -- 'L3MON4D3/LuaSnip', 'saadparwaiz1/cmp_luasnip',
+    'David-Kunz/treesitter-unit',
+    'mfussenegger/nvim-dap',
     'voldikss/vim-floaterm',
     {'rcarriga/nvim-dap-ui', dependencies = {"nvim-neotest/nvim-nio"}},
-    -- use 'ldelossa/litee.nvim',
-    -- use 'ldelossa/gh.nvim',
-    build = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && rm -rf out && mv dist out",
     {
         "microsoft/vscode-node-debug2",
         -- lazy = true,
         build = "npm install && NODE_OPTIONS=--no-experimental-fetch npm run build"
-    }, -- use {
-    --     'ggandor/leap.nvim',
-    --     config = function() require('leap').add_default_mappings() end
-    -- }
+    },
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
-    -- { 'echasnovski/mini-git' },
-    {
-        'echasnovski/mini.completion',
-        version = false,
-        config = function() require('mini.completion').setup() end
-    },
-    -- {
-    --     'echasnovski/mini.comment',
-    --     version = false,
-    --     config = function() require('mini.comment').setup() end
-    -- },
     {
         'echasnovski/mini.files',
         version = false,
@@ -120,35 +87,6 @@ require('lazy').setup({
         end
 
     }
-    -- {
-    --     'echasnovski/mini.base16',
-    --     version = false,
-    --     config = function()
-    --         require('mini.base16').setup({
-    --             palette = {
-    --                 base00 = "#181818",
-    --                 base01 = "#282828",
-    --                 base02 = "#383838",
-    --                 base03 = "#585858",
-    --                 base04 = "#b8b8b8",
-    --                 base05 = "#d8d8d8",
-    --                 base06 = "#e8e8e8",
-    --                 base07 = "#f8f8f8",
-    --                 base08 = "#ab4642",
-    --                 base09 = "#dc9656",
-    --                 base0A = "#f7ca88",
-    --                 base0B = "#a1b56c",
-    --                 base0C = "#86c1b9",
-    --                 base0D = "#7cafc2",
-    --                 base0E = "#ba8baf",
-    --                 base0F = "#a16946"
-    --             }
-    --         })
-    --     end
-    -- }
-    -- {
-    --     'Exafunction/codeium.vim',
-    -- }
 }, {dev = {path = "/Users/d065023/projects/nvim"}})
 
 -- vim.g.codeium_enabled = false
@@ -211,7 +149,13 @@ require('lazy').setup({
 -- end)
 
 -- default options
-opt.completeopt = {'menu', 'menuone', 'noselect'}
+opt.completeopt = {
+  'menu',
+  'menuone',
+  'noselect',
+  'popup',
+  'fuzzy'
+}
 opt.laststatus = 3
 opt.mouse = 'a'
 opt.splitright = true
@@ -223,6 +167,7 @@ opt.number = true
 opt.ignorecase = true
 opt.smartcase = true
 opt.incsearch = true
+vim.g.markdown_recommended_style = 0
 -- opt.so = 10
 -- opt.relativenumber = true
 vim.cmd('set nonumber')
@@ -296,63 +241,63 @@ require('gitsigns').setup({
 })
 
 -- sbdchd/neoformat
-vim.keymap.set('n', '<leader>F', ':Format<CR>')
+vim.keymap.set('n', '<leader>F', ':!prettier % --config ~/SAPDevelop/dev/cds/.prettierrc.js --write<CR>')
 vim.keymap.set('n', '<leader>fl', function() vim.lsp.buf.format() end)
-require('formatter').setup({
-    logging = false,
-    filetype = {
-        javascript = {
-            -- prettierd
-            function()
-                return {
-                    exe = "prettierd",
-                    args = {vim.api.nvim_buf_get_name(0)},
-                    stdin = true
-                }
-            end
-        },
-        typescript = {
-            -- prettierd
-            function()
-                return {
-                    exe = "prettierd",
-                    args = {vim.api.nvim_buf_get_name(0)},
-                    stdin = true
-                }
-            end
-        },
-        json = {
-            -- prettierd
-            function()
-                return {
-                    exe = "prettierd",
-                    args = {vim.api.nvim_buf_get_name(0)},
-                    stdin = true
-                }
-            end
-        },
-        rust = {function() return {exe = "rustfmt", stdin = true} end},
-        lua = {function() return {exe = "lua-format", stdin = true} end},
-        sql = {
-            -- prettierd
-            function()
-                return {
-                    exe = "sql-formatter",
-                    args = {vim.api.nvim_buf_get_name(0)},
-                    stdin = true
-                }
-            end
-        }
-    }
-})
+-- require('formatter').setup({
+--     logging = false,
+--     filetype = {
+--         javascript = {
+--             -- prettierd
+--             function()
+--                 return {
+--                     exe = "prettierd",
+--                     args = {vim.api.nvim_buf_get_name(0)},
+--                     stdin = true
+--                 }
+--             end
+--         },
+--         typescript = {
+--             -- prettierd
+--             function()
+--                 return {
+--                     exe = "prettierd",
+--                     args = {vim.api.nvim_buf_get_name(0)},
+--                     stdin = true
+--                 }
+--             end
+--         },
+--         json = {
+--             -- prettierd
+--             function()
+--                 return {
+--                     exe = "prettierd",
+--                     args = {vim.api.nvim_buf_get_name(0)},
+--                     stdin = true
+--                 }
+--             end
+--         },
+--         rust = {function() return {exe = "rustfmt", stdin = true} end},
+--         lua = {function() return {exe = "lua-format", stdin = true} end},
+--         sql = {
+--             -- prettierd
+--             function()
+--                 return {
+--                     exe = "sql-formatter",
+--                     args = {vim.api.nvim_buf_get_name(0)},
+--                     stdin = true
+--                 }
+--             end
+--         }
+--     }
+-- })
 
 _G.fzflua_find_files_in_path = function(path)
     local _path = path or vim.fn.input("Dir: ", "", "dir")
-    require('fzf-lua').live_grep({ cwd = _path })
+    require('fzf-lua').files({ cwd = _path })
 end
 _G.fzflua_live_grep_in_path = function(path)
     local _path = path or vim.fn.input("Dir: ", "", "dir")
-    require('fzf-lua').files({ cwd = _path })
+    require('fzf-lua').live_grep({ cwd = _path })
 end
 
 require("fzf-lua").register_ui_select(function(_, items)
@@ -395,11 +340,11 @@ vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end)
 vim.keymap.set('n', 'gD', function() vim.lsp.buf.implementation() end)
 vim.keymap.set('n', '<c-k>', function() vim.lsp.buf.signature_help() end)
 vim.keymap.set('n', 'gr', function() vim.lsp.buf.references() end)
-vim.keymap.set('n', 'gR', function() vim.lsp.buf.rename() end)
-vim.keymap.set('n', 'ga', function() vim.lsp.buf.code_action() end)
-vim.keymap.set('n', 'ge', function() vim.diagnostic.goto_next() end)
-vim.keymap.set('n', 'gE', function() vim.diagnostic.goto_prev() end)
-vim.keymap.set('n', 'gA', ':FzfLua lsp_code_actions<CR>')
+-- vim.keymap.set('n', 'gR', function() vim.lsp.buf.rename() end)
+-- vim.keymap.set('n', 'ga', function() vim.lsp.buf.code_action() end)
+-- vim.keymap.set('n', 'ge', function() vim.diagnostic.goto_next() end)
+-- vim.keymap.set('n', 'gE', function() vim.diagnostic.goto_prev() end)
+-- vim.keymap.set('n', 'gA', ':FzfLua lsp_code_actions<CR>')
 
 -- -- CDS
 -- cmd([[
@@ -456,12 +401,24 @@ vim.keymap.set('n', '<leader>g', ':FloatermNew lazygit<CR>')
 
 -- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 --
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldtext = ""
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.opt.foldtext = ""
 -- vim.opt.foldlevel = 99
-vim.opt.foldlevelstart = 99
+-- vim.opt.foldlevelstart = 99
 -- vim.opt.foldlevelstart = 0
+
+vim.o.foldenable = true
+vim.o.foldlevel = 99
+--vim.o.foldmethod = "indent"
+vim.o.foldmethod = "expr"
+ vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- vim.o.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+vim.o.foldtext = ""
+vim.opt.foldcolumn = "0"
+vim.opt.foldopen = "search"
+vim.opt.fillchars:append({fold = " "})
+
 
 vim.keymap.set('n', '<leader>n', ':tabe ~/tmp/notes.md<CR>')
 
@@ -1003,44 +960,44 @@ dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
 require('mason').setup()
 require("mason-lspconfig").setup()
-require("mason-lspconfig").setup_handlers {
-    function(server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup {}
-    end,
-    ["lua_ls"] = function()
-        require("lspconfig").lua_ls.setup({
-            settings = {Lua = {diagnostics = {globals = {'vim'}}}}
-        })
-    end,
-    ["vtsls"] = function()
-        require("lspconfig").vtsls.setup({
-            settings = {
-                typescript = {
-                    inlayHints = {
-                        includeInlayEnumMemberValueHints = true,
-                        includeInlayFunctionLikeReturnTypeHints = true,
-                        includeInlayFunctionParameterTypeHints = true,
-                        includeInlayParameterNameHints = 'all',
-                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                        includeInlayPropertyDeclarationTypeHints = true,
-                        includeInlayVariableTypeHints = true
-                    }
-                },
-                javascript = {
-                    inlayHints = {
-                        includeInlayEnumMemberValueHints = true,
-                        includeInlayFunctionLikeReturnTypeHints = true,
-                        includeInlayFunctionParameterTypeHints = true,
-                        includeInlayParameterNameHints = 'all',
-                        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-                        includeInlayPropertyDeclarationTypeHints = true,
-                        includeInlayVariableTypeHints = true
-                    }
-                }
-            }
-        })
-    end
-}
+-- require("mason-lspconfig").setup_handlers {
+--     function(server_name) -- default handler (optional)
+--         require("lspconfig")[server_name].setup {}
+--     end,
+--     ["lua_ls"] = function()
+--         require("lspconfig").lua_ls.setup({
+--             settings = {Lua = {diagnostics = {globals = {'vim'}}}}
+--         })
+--     end,
+--     ["vtsls"] = function()
+--         require("lspconfig").vtsls.setup({
+--             settings = {
+--                 typescript = {
+--                     inlayHints = {
+--                         includeInlayEnumMemberValueHints = true,
+--                         includeInlayFunctionLikeReturnTypeHints = true,
+--                         includeInlayFunctionParameterTypeHints = true,
+--                         includeInlayParameterNameHints = 'all',
+--                         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+--                         includeInlayPropertyDeclarationTypeHints = true,
+--                         includeInlayVariableTypeHints = true
+--                     }
+--                 },
+--                 javascript = {
+--                     inlayHints = {
+--                         includeInlayEnumMemberValueHints = true,
+--                         includeInlayFunctionLikeReturnTypeHints = true,
+--                         includeInlayFunctionParameterTypeHints = true,
+--                         includeInlayParameterNameHints = 'all',
+--                         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+--                         includeInlayPropertyDeclarationTypeHints = true,
+--                         includeInlayVariableTypeHints = true
+--                     }
+--                 }
+--             }
+--         })
+--     end
+-- }
 -- typescript.inlayHints.parameterNames.enabled
 vim.keymap.set({'n', 'v'}, '<leader>]', ':Gen<CR>')
 vim.keymap.set('n', '<leader>[', ':Gen Chat<CR>')
@@ -1163,3 +1120,66 @@ vim.cmd('abb genuuid1 a11fb6f1-36ab-46ec-b00c-d379031e817a')
 vim.cmd('abb genuuid2 b22fb6f1-36ab-46ec-b00c-d379031e817a')
 vim.cmd('abb genuuid3 c33fb6f1-36ab-46ec-b00c-d379031e817a')
 vim.cmd('abb genuuid4 d44fb6f1-36ab-46ec-b00c-d379031e817a')
+
+vim.cmd('hi DiffAdd      gui=none    guifg=NONE')
+vim.cmd('hi DiffChange   gui=none    guifg=NONE ')
+vim.cmd('hi DiffText     gui=none    guifg=NONE ')
+
+vim.keymap.set('i', '<c-r>', '<c-r><c-o>')
+-- vim.diagnostic.config({ virtual_lines = true })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
+
+
+vim.diagnostic.config({ virtual_text = { current_line = true } })
+vim.cmd('Copilot disable')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+vim.keymap.set('n', '<leader>fa', function ()
+  local query = vim.fn.input("Query: ", "")
+  require("fzf-lua").fzf_exec(
+      "sg --context 0 --heading never --pattern '" .. query .. "' 2>/dev/null",
+      {
+          exec_empty_query = false,
+          actions = {
+              ["default"] = require "fzf-lua".actions.file_edit,
+          },
+          previewer = 'builtin'
+      }
+  )
+end)
+
