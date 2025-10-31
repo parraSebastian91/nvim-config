@@ -28,31 +28,96 @@ require('lazy').setup({
         },
       }
     },
-      {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        dependencies = {
-          { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
-          { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-        },
-        build = "make tiktoken", -- Only on MacOS or Linux
-        opts = {
-        },
-      },
+    -- {
+    --   'Verf/deepwhite.nvim',
+    --   lazy = false,
+    --   priority = 1000,
+    --   config = function()
+    --     vim.cmd [[colorscheme deepwhite]]
+    --   end,
+    -- },
+    -- {
+    --   'NickvanDyke/opencode.nvim',
+    --   dependencies = {
+    --     'folke/snacks.nvim',
+    --   },
+    --   ---@type opencode.Config
+    --   opts = {
+    --     -- Your configuration, if any
+    --   },
+    --   -- stylua: ignore
+    --   keys = {
+    --     -- opencode.nvim exposes a general, flexible API — customize it to your workflow!
+    --     -- But here are some examples to get you started :)
+    --     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
+    --     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
+    --     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
+    --     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
+    --     { '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, desc = 'Explain code near cursor' },
+    --     -- { '<leader>or', function() require('opencode').prompt('Review @file for correctness and readability') end, desc = 'Review file', },
+    --     -- { '<leader>of', function() require('opencode').prompt('Fix these @diagnostics') end, desc = 'Fix errors', },
+    --     -- { '<leader>oo', function() require('opencode').prompt('Optimize @selection for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
+    --     -- { '<leader>od', function() require('opencode').prompt('Add documentation comments for @selection') end, desc = 'Document selection', mode = 'v', },
+    --     -- { '<leader>ot', function() require('opencode').prompt('Add tests for @selection') end, desc = 'Test selection', mode = 'v', },
+    --   },
+    -- },
+    -- {"ravitemer/mcphub.nvim",
+    -- dependencies = {
+    --   "nvim-lua/plenary.nvim",
+    -- },
+  --   build = "npm install -g mcp-hub@latest",  -- Installs `mcp-hub` node binary globally
+  --   config = function()
+  --     require("mcphub").setup()
+  --   end
+  -- },
+    -- { "olimorris/codecompanion.nvim",
+    --     dependencies = {
+    --       { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    --       { "nvim-lua/plenary.nvim" },
+    --   },
+    --   opts = {} 
+    -- },
+--     {
+--     "ravitemer/mcphub.nvim",
+--     dependencies = {
+--         "nvim-lua/plenary.nvim",
+--     },
+--     build = "npm install -g mcp-hub@latest",  -- Installs `mcp-hub` node binary globally
+--     config = function()
+--         require("mcphub").setup()
+--     end
+-- },
+   "github/copilot.vim",
+    -- {
+    --   "CopilotC-Nvim/CopilotChat.nvim",
+    --   dependencies = {
+    --     { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
+    --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+    --   },
+    --   build = "make tiktoken", -- Only on MacOS or Linux
+    --   opts = {
+    --   },
+    -- },
     'nvim-lua/popup.nvim',
     'sindrets/diffview.nvim',
     'lewis6991/gitsigns.nvim',
     { 'David-Kunz/jester', dev = true },
+    { 'David-Kunz/cov.nvim', config = function()
+    require("cov").setup()
+  end },
     {
         'David-Kunz/gen.nvim',
         dev = true,
         opts = {
+            model = 'gpt-oss',
             -- model = 'qwen2.5:14b',
             -- model = 'vanilj/phi-4-unsloth',
             -- model = 'deepseek-r1:14b',
             -- model = 'mistral-small',
             -- model = 'gemma3:12b',
             -- model = 'gemma3:27b-it-qat',
-            model = 'qwen3:30b-a3b',
+            -- model = 'qwen3:30b-a3b',
+            -- model = 'gemma3n',
             preview = true,
             -- file = true,
             -- hidden = true
@@ -85,7 +150,6 @@ require('lazy').setup({
         config = function()
             require('mini.files').setup({mappings = {go_in_plus = 'l'}})
         end
-
     }
 }, {dev = {path = "/Users/d065023/projects/nvim"}})
 
@@ -325,6 +389,7 @@ vim.keymap.set('n', '<leader>fT',
                function() fzflua_live_grep_in_path("./tests") end)
 vim.keymap.set('n', '<leader>ff', ':FzfLua live_grep<CR>')
 vim.keymap.set('n', '<leader>fr', ':FzfLua resume<CR>')
+vim.keymap.set('n', '<leader>fz', ':FzfLua zoxide<CR>')
 vim.keymap.set('n', '<leader>fG', ':FzfLua git_branches<CR>')
 vim.keymap.set('n', '<leader>fg', ':FzfLua git_status<CR>')
 vim.keymap.set('n', '<c-\\>', ':FzfLua buffers<CR>')
@@ -335,7 +400,7 @@ vim.keymap.set('n', '<leader>fy', ':let @"=expand("%") . ":" . line(".") . ":" .
 -- David-Kunz/cmp-npm
 -- require('cmp-npm').setup({only_latest_version = true})
 
-vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
+-- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)  USE DEFAULT INSTEAD ctrl-]
 vim.keymap.set('n', 'gi', function() vim.lsp.buf.implementation() end)
 vim.keymap.set('n', 'gD', function() vim.lsp.buf.implementation() end)
 vim.keymap.set('n', '<c-k>', function() vim.lsp.buf.signature_help() end)
@@ -394,6 +459,7 @@ vim.opt.fillchars = {
 vim.g.floaterm_width = 0.95
 vim.g.floaterm_height = 0.95
 vim.keymap.set('n', '<leader>g', ':FloatermNew lazygit<CR>')
+-- vim.keymap.set('n', '<leader>o', ':FloatermNew opencode<CR>')
 
 -- cmd('set foldmethod=indent')
 -- cmd('set foldmethod=expr')
@@ -726,24 +792,38 @@ vim.cmd('iabbrev :demo: 💻 Demo')
 
 vim.cmd('iabbrev maxdepth require(\'util\').inspect.defaultOptions.depth = 9999')
 
-
-_G.term_buf_of_tab = _G.term_buf_of_tab or {}
+-- global table to track terminals per cwd
+_G.term_buf_per_cwd = _G.term_buf_per_cwd or {}
 _G.term_buf_max_nmb = _G.term_buf_max_nmb or 0
 
 local function spawn_terminal()
     local cur_tab = vim.api.nvim_get_current_tabpage()
+    local cwd = vim.fn.getcwd()
+
+    -- delete all other terminals (different cwd)
+    for other_cwd, buf in pairs(_G.term_buf_per_cwd) do
+        if other_cwd ~= cwd and vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_delete(buf, { force = true })
+            _G.term_buf_per_cwd[other_cwd] = nil
+        end
+    end
+
+    -- spawn new terminal for current cwd
     vim.cmd('vs | terminal')
     local cur_buf = vim.api.nvim_get_current_buf()
     _G.term_buf_max_nmb = _G.term_buf_max_nmb + 1
-    vim.api.nvim_buf_set_name(cur_buf, "Terminal " .. _G.term_buf_max_nmb)
-    table.insert(_G.term_buf_of_tab, cur_tab, cur_buf)
+    vim.api.nvim_buf_set_name(cur_buf, "Terminal " .. _G.term_buf_max_nmb .. " (" .. cwd .. ")")
+    _G.term_buf_per_cwd[cwd] = cur_buf
+
     vim.cmd(':startinsert')
 end
 
 function Toggle_terminal()
     local cur_tab = vim.api.nvim_get_current_tabpage()
-    local term_buf = term_buf_of_tab[cur_tab]
-    if term_buf ~= nil then
+    local cwd = vim.fn.getcwd()
+    local term_buf = _G.term_buf_per_cwd[cwd]
+
+    if term_buf ~= nil and vim.api.nvim_buf_is_valid(term_buf) then
         local cur_buf = vim.api.nvim_get_current_buf()
         if cur_buf == term_buf then
             vim.cmd('q')
@@ -762,9 +842,10 @@ function Toggle_terminal()
         end
     else
         spawn_terminal()
-        vim.cmd(':startinsert')
     end
 end
+
+
 vim.keymap.set('n', '<c-y>', Toggle_terminal)
 vim.keymap.set('i', '<c-y>', '<ESC>:lua Toggle_terminal()<CR>')
 vim.keymap.set('t', '<c-y>', '<c-\\><c-n>:lua Toggle_terminal()<CR>')
@@ -1079,7 +1160,7 @@ require('gen').prompts['Code_Completion'] = {
   -- model = "qwen2.5-coder:32b",
   extract = "```$filetype\n(.-)```"
 }
-vim.keymap.set('i', '<c-]>', '<esc>:Gen Code_Completion<CR>')
+--vim.keymap.set('i', '<c-]>', '<esc>:Gen Code_Completion<CR>')
 
 -- require('gen').prompts['Yi_Code_Explain'] = { 
 --   prompt = "Explain the following $filetype code:\n\n $text",
@@ -1121,6 +1202,9 @@ vim.cmd('abb genuuid2 b22fb6f1-36ab-46ec-b00c-d379031e817a')
 vim.cmd('abb genuuid3 c33fb6f1-36ab-46ec-b00c-d379031e817a')
 vim.cmd('abb genuuid4 d44fb6f1-36ab-46ec-b00c-d379031e817a')
 
+vim.cmd('abb emri ✅')
+vim.cmd('abb emwr ❌')
+
 vim.cmd('hi DiffAdd      gui=none    guifg=NONE')
 vim.cmd('hi DiffChange   gui=none    guifg=NONE ')
 vim.cmd('hi DiffText     gui=none    guifg=NONE ')
@@ -1154,8 +1238,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 
 vim.diagnostic.config({ virtual_text = { current_line = true } })
-vim.cmd('Copilot disable')
-
+-- vim.cmd('Copilot disable')
 
 
 
@@ -1183,3 +1266,30 @@ vim.keymap.set('n', '<leader>fa', function ()
   )
 end)
 
+-- vim.lsp.set_log_level('DEBUG')
+
+-- require("codecompanion").setup({
+--   extensions = {
+--     mcphub = {
+--       callback = "mcphub.extensions.codecompanion",
+--       opts = {
+--         show_result_in_chat = true,  -- Show mcp tool results in chat
+--         make_vars = true,            -- Convert resources to #variables
+--         make_slash_commands = true,  -- Add prompts as /slash commands
+--       }
+--     }
+--   }
+-- })
+--
+--
+
+
+
+-- vim.keymap.set('n', '<leader>a', ':CopilotChatToggle<CR>')
+vim.keymap.set("n", "<leader>yf", function()
+  local filename = vim.fn.expand("%") -- just the file name
+  vim.fn.setreg("+", filename)          -- put into system clipboard
+  print("Yanked file name: " .. filename)
+end, { desc = "Yank current file name to clipboard" })
+
+vim.keymap.set("n", "<leader>c", ":CoverageToggle<CR>", { desc = "Toggle coverage" })
