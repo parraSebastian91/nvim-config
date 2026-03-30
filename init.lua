@@ -16,7 +16,43 @@ g.mapleader = " "
 
 require('lazy').setup({
     -- 'mhartington/formatter.nvim',
-    {'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
+    {
+      "folke/tokyonight.nvim",
+      lazy = false,
+      priority = 1000,
+      opts = {},
+    },
+    {
+      "carlos-algms/agentic.nvim",
+      opts = {
+        -- Available by default: "claude-acp" | "gemini-acp" | "codex-acp" | "opencode-acp" | "cursor-acp"
+        provider = "opencode-acp", -- setting the name here is all you need to get started
+        windows = {
+          width = '50%'
+        }
+      },
+      -- these are just suggested keymaps; customize as desired
+      keys = {
+        {
+          "<leader>ot", function() require("agentic").toggle() end,
+          mode = { "n" },
+          desc = "Toggle Agentic Chat"
+        },
+        {
+          "<leader>of",
+          function() require("agentic").add_selection_or_file_to_context() end,
+          mode = { "n", "v" },
+          desc = "Add file or selection to Agentic to Context"
+        },
+        {
+          "<leader>on",
+          function() require("agentic").new_session() end,
+          mode = { "n" },
+          desc = "New Agentic Session"
+        },
+      },
+    },
+    {'nvim-treesitter/nvim-treesitter', branch = 'main', build = ':TSUpdate'},
     {
       "ibhagwan/fzf-lua",
       dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -28,6 +64,7 @@ require('lazy').setup({
         },
       }
     },
+    -- 'p00f/alabaster.nvim',
     -- {
     --   'Verf/deepwhite.nvim',
     --   lazy = false,
@@ -101,7 +138,6 @@ require('lazy').setup({
     'nvim-lua/popup.nvim',
     'sindrets/diffview.nvim',
     'lewis6991/gitsigns.nvim',
-    { 'David-Kunz/jester', dev = true },
     { 'David-Kunz/cov.nvim', config = function()
     require("cov").setup()
   end },
@@ -305,7 +341,8 @@ require('gitsigns').setup({
 })
 
 -- sbdchd/neoformat
-vim.keymap.set('n', '<leader>F', ':!prettier % --config ~/SAPDevelop/dev/cds/.prettierrc.js --write<CR>')
+-- vim.keymap.set('n', '<leader>F', ':!prettier % --config ~/SAPDevelop/dev/cds/.prettierrc.js --write<CR>')
+vim.keymap.set('n', '<leader>F', ':!biome format % --write<CR>')
 vim.keymap.set('n', '<leader>fl', function() vim.lsp.buf.format() end)
 -- require('formatter').setup({
 --     logging = false,
@@ -488,33 +525,19 @@ vim.opt.fillchars:append({fold = " "})
 
 vim.keymap.set('n', '<leader>n', ':tabe ~/tmp/notes.md<CR>')
 
-local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-parser_config.cds = {
+-- nvim-treesitter main branch: extend the parsers table directly
+require('nvim-treesitter.parsers').cds = {
     install_info = {
-        -- local path or git repo
-        -- url = "~/apps/tree-sitter-cds",
         url = "/Users/d065023/apps/tree-sitter-cds",
         files = {"src/parser.c", "src/scanner.c"}
     },
-    filetype = "cds",
-    -- additional filetypes that use this parser
-    used_by = {"cdl", "hdbcds"}
 }
+vim.treesitter.language.register('cds', {'cds', 'cdl', 'hdbcds'})
 
 
 -- require('markid')
-require'nvim-treesitter.configs'.setup {
-    highlight = {enable = true},
-   -- incremental_selection = {
-   --     enable = true,
-   --     keymaps = {
-   --         init_selection = '<CR>',
-   --         node_incremental = '<CR>',
-   --         node_decremental = '<S-CR>'
-   --     }
-   -- }
-    -- markid = {enable = true}
-}
+-- nvim-treesitter main branch: highlight is enabled by default via vim.treesitter
+-- require'nvim-treesitter.configs'.setup is removed in the main branch
 
 -- mxsdev/nvim-dap-vscode-js
 -- require('dap-vscode-js').setup({
@@ -645,22 +668,6 @@ vim.keymap.set('n', '<leader>ds', ':FzfLua dap_frames<CR>')
 vim.keymap.set('n', '<leader>db', ':FzfLua dap_breakpoints<CR>')
 
 -- require('nvim-dap-virtual-text').setup()
-
--- David-Kunz/jester
-require'jester'.setup({
-    path_to_jest = "/opt/homebrew/bin/jest",
-    --dap = {type = 'node2'}
-    dap = {type = 'pwa-node'}
-})
--- require'jester'.setup({ dap = { type = 'pwa-node'}})
--- require'jester'.setup({ path_to_jest = "/opt/homebrew/bin/jest", dap = { type = 'pwa-node' } })
-vim.keymap.set('n', '<leader>tt', function() require"jester".run() end)
-vim.keymap.set('n', '<leader>t_', function() require"jester".run_last() end)
-vim.keymap.set('n', '<leader>tf', function() require"jester".run_file() end)
-vim.keymap.set('n', '<leader>d_', function() require"jester".debug_last() end)
-vim.keymap.set('n', '<leader>df', function() require"jester".debug_file() end)
-vim.keymap.set('n', '<leader>dq', function() require"jester".terminate() end)
-vim.keymap.set('n', '<leader>dd', function() require"jester".debug() end)
 
 -- lua language server
 -- local system_name
@@ -871,7 +878,7 @@ end
 
 vim.keymap.set('n', '<leader>x', ':lua Send_line_to_terminal()<CR>')
 
-require"nvim-treesitter.configs".setup {playground = {enable = true}}
+-- require"nvim-treesitter.configs".setup {playground = {enable = true}} -- removed: configs.setup API gone in main branch
 
 vim.keymap.set('n', '<c-o>', '<c-o>zz')
 vim.keymap.set('n', '<c-i>', '<c-i>zz')
@@ -1293,3 +1300,58 @@ vim.keymap.set("n", "<leader>yf", function()
 end, { desc = "Yank current file name to clipboard" })
 
 vim.keymap.set("n", "<leader>c", ":CoverageToggle<CR>", { desc = "Toggle coverage" })
+vim.cmd [[hi @lsp.type.parameter guibg=#082b2d]]
+vim.cmd [[hi @lsp.type.function guibg=#1f2b2d]]
+vim.cmd [[hi @lsp.type.method guibg=#1f2b2d]]
+
+-- also set it for methods/functions
+vim.cmd [[hi @function guibg=#1f2b2d]]
+vim.cmd [[hi @function.builtin guibg=#1f2b2d]]
+vim.cmd [[hi @function.call guibg=#1f2b2d]]
+vim.cmd [[hi @function.macro guibg=#1f2b2d]]
+vim.cmd [[hi @function.method guibg=#1f2b2d]]
+vim.cmd [[hi @function.method.call guibg=#1f2b2d]]
+
+--vim.cmd [[hi @lsp.type.variable guibg=#c7c7c7]]
+--vim.cmd [[hi @lsp.type.class guibg=blue]]
+--vim.cmd [[hi @lsp.type.method guibg=orange]]
+
+-- @lsp.type.class          Identifiers that declare or reference a class type
+-- @lsp.type.comment        Tokens that represent a comment
+-- @lsp.type.decorator      Identifiers that declare or reference decorators and annotations
+-- @lsp.type.enum           Identifiers that declare or reference an enumeration type
+-- @lsp.type.enumMember     Identifiers that declare or reference an enumeration property, constant, or member
+-- @lsp.type.event          Identifiers that declare an event property
+-- @lsp.type.function       Identifiers that declare a function
+-- @lsp.type.interface      Identifiers that declare or reference an interface type
+-- @lsp.type.keyword        Tokens that represent a language keyword
+-- @lsp.type.macro          Identifiers that declare a macro
+-- @lsp.type.method         Identifiers that declare a member function or method
+-- @lsp.type.modifier       Tokens that represent a modifier
+-- @lsp.type.namespace      Identifiers that declare or reference a namespace, module, or package
+-- @lsp.type.number         Tokens that represent a number literal
+-- @lsp.type.operator       Tokens that represent an operator
+-- @lsp.type.parameter      Identifiers that declare or reference a function or method parameters
+-- @lsp.type.property       Identifiers that declare or reference a member property, member field, or member variable
+-- @lsp.type.regexp         Tokens that represent a regular expression literal
+-- @lsp.type.string         Tokens that represent a string literal
+-- @lsp.type.struct         Identifiers that declare or reference a struct type
+-- @lsp.type.type           Identifiers that declare or reference a type that is not covered above
+-- @lsp.type.typeParameter  Identifiers that declare or reference a type parameter
+-- @lsp.type.variable       Identifiers that declare or reference a local or global variable
+--
+-- @lsp.mod.abstract        Types and member functions that are abstract
+-- @lsp.mod.async           Functions that are marked async
+-- @lsp.mod.declaration     Declarations of symbols
+-- @lsp.mod.defaultLibrary  Symbols that are part of the standard library
+-- @lsp.mod.definition      Definitions of symbols, for example, in header files
+-- @lsp.mod.deprecated      Symbols that should no longer be used
+-- @lsp.mod.documentation   Occurrences of symbols in documentation
+-- @lsp.mod.modification    Variable references where the variable is assigned to
+-- @lsp.mod.readonly        Readonly variables and member fields (constants)
+-- @lsp.mod.static          Class members (static members)
+--
+--
+
+vim.cmd[[colorscheme tokyonight]]
+
