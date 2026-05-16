@@ -1,193 +1,61 @@
 -- vim.cmd("set shell=/bin/zsh")
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git", "clone", "--filter=blob:none", "--single-branch",
-        "https://github.com/folke/lazy.nvim.git", lazypath
-    })
-end
-vim.opt.runtimepath:prepend(lazypath)
-
 local cmd = vim.cmd
 local g = vim.g
 local opt = vim.opt
 
 g.mapleader = " "
 
-require('lazy').setup({
-    -- 'mhartington/formatter.nvim',
-    {
-      "folke/tokyonight.nvim",
-      lazy = false,
-      priority = 1000,
-      opts = {},
-    },
-    {
-      "carlos-algms/agentic.nvim",
-      opts = {
-        -- Available by default: "claude-acp" | "gemini-acp" | "codex-acp" | "opencode-acp" | "cursor-acp"
-        provider = "opencode-acp", -- setting the name here is all you need to get started
-        windows = {
-          width = '50%'
-        }
-      },
-      -- these are just suggested keymaps; customize as desired
-      keys = {
-        {
-          "<leader>ot", function() require("agentic").toggle() end,
-          mode = { "n" },
-          desc = "Toggle Agentic Chat"
-        },
-        {
-          "<leader>of",
-          function() require("agentic").add_selection_or_file_to_context() end,
-          mode = { "n", "v" },
-          desc = "Add file or selection to Agentic to Context"
-        },
-        {
-          "<leader>on",
-          function() require("agentic").new_session() end,
-          mode = { "n" },
-          desc = "New Agentic Session"
-        },
-      },
-    },
-    {'nvim-treesitter/nvim-treesitter', branch = 'main', build = ':TSUpdate'},
-    {
-      "ibhagwan/fzf-lua",
-      dependencies = { "nvim-tree/nvim-web-devicons" },
-      opts = {
-        keymap = {
-          fzf = {
-            ["ctrl-q"] = "select-all+accept",
-          },
-        },
-      }
-    },
-    -- 'p00f/alabaster.nvim',
-    -- {
-    --   'Verf/deepwhite.nvim',
-    --   lazy = false,
-    --   priority = 1000,
-    --   config = function()
-    --     vim.cmd [[colorscheme deepwhite]]
-    --   end,
-    -- },
-    -- {
-    --   'NickvanDyke/opencode.nvim',
-    --   dependencies = {
-    --     'folke/snacks.nvim',
-    --   },
-    --   ---@type opencode.Config
-    --   opts = {
-    --     -- Your configuration, if any
-    --   },
-    --   -- stylua: ignore
-    --   keys = {
-    --     -- opencode.nvim exposes a general, flexible API — customize it to your workflow!
-    --     -- But here are some examples to get you started :)
-    --     { '<leader>ot', function() require('opencode').toggle() end, desc = 'Toggle opencode', },
-    --     { '<leader>oa', function() require('opencode').ask() end, desc = 'Ask opencode', mode = { 'n', 'v' }, },
-    --     { '<leader>oA', function() require('opencode').ask('@file ') end, desc = 'Ask opencode about current file', mode = { 'n', 'v' }, },
-    --     { '<leader>on', function() require('opencode').command('/new') end, desc = 'New session', },
-    --     { '<leader>oe', function() require('opencode').prompt('Explain @cursor and its context') end, desc = 'Explain code near cursor' },
-    --     -- { '<leader>or', function() require('opencode').prompt('Review @file for correctness and readability') end, desc = 'Review file', },
-    --     -- { '<leader>of', function() require('opencode').prompt('Fix these @diagnostics') end, desc = 'Fix errors', },
-    --     -- { '<leader>oo', function() require('opencode').prompt('Optimize @selection for performance and readability') end, desc = 'Optimize selection', mode = 'v', },
-    --     -- { '<leader>od', function() require('opencode').prompt('Add documentation comments for @selection') end, desc = 'Document selection', mode = 'v', },
-    --     -- { '<leader>ot', function() require('opencode').prompt('Add tests for @selection') end, desc = 'Test selection', mode = 'v', },
-    --   },
-    -- },
-    -- {"ravitemer/mcphub.nvim",
-    -- dependencies = {
-    --   "nvim-lua/plenary.nvim",
-    -- },
-  --   build = "npm install -g mcp-hub@latest",  -- Installs `mcp-hub` node binary globally
-  --   config = function()
-  --     require("mcphub").setup()
-  --   end
-  -- },
-    -- { "olimorris/codecompanion.nvim",
-    --     dependencies = {
-    --       { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
-    --       { "nvim-lua/plenary.nvim" },
-    --   },
-    --   opts = {} 
-    -- },
---     {
---     "ravitemer/mcphub.nvim",
---     dependencies = {
---         "nvim-lua/plenary.nvim",
---     },
---     build = "npm install -g mcp-hub@latest",  -- Installs `mcp-hub` node binary globally
---     config = function()
---         require("mcphub").setup()
---     end
--- },
-   "github/copilot.vim",
-    -- {
-    --   "CopilotC-Nvim/CopilotChat.nvim",
-    --   dependencies = {
-    --     { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
-    --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-    --   },
-    --   build = "make tiktoken", -- Only on MacOS or Linux
-    --   opts = {
-    --   },
-    -- },
-    'nvim-lua/popup.nvim',
-    'sindrets/diffview.nvim',
-    'lewis6991/gitsigns.nvim',
-    { 'David-Kunz/cov.nvim', config = function()
-    require("cov").setup()
-  end },
-    {
-        'David-Kunz/gen.nvim',
-        dev = true,
-        opts = {
-            model = 'gpt-oss',
-            -- model = 'qwen2.5:14b',
-            -- model = 'vanilj/phi-4-unsloth',
-            -- model = 'deepseek-r1:14b',
-            -- model = 'mistral-small',
-            -- model = 'gemma3:12b',
-            -- model = 'gemma3:27b-it-qat',
-            -- model = 'qwen3:30b-a3b',
-            -- model = 'gemma3n',
-            preview = true,
-            -- file = true,
-            -- hidden = true
-            -- no_auto_close = true
-            -- model = 'wizardlm2',
-            -- model = 'dolphin-mixtral:8x7b-v2.5-q3_K_S',
-            -- model = 'openhermes2.5-mistral',
-            -- show_model = true,
-            -- show_prompt = true,
-            -- start_up = function() print('start up') end,
-            -- display_mode = 'no-split',
-            -- debug = true
-        }
-    },
-    'David-Kunz/treesitter-unit',
-    'mfussenegger/nvim-dap',
-    'voldikss/vim-floaterm',
-    {'rcarriga/nvim-dap-ui', dependencies = {"nvim-neotest/nvim-nio"}},
-    {
-        "microsoft/vscode-node-debug2",
-        -- lazy = true,
-        build = "npm install && NODE_OPTIONS=--no-experimental-fetch npm run build"
-    },
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
-    {
-        'echasnovski/mini.files',
-        version = false,
-        config = function()
-            require('mini.files').setup({mappings = {go_in_plus = 'l'}})
-        end
-    }
-}, {dev = {path = "/Users/d065023/projects/nvim"}})
+-- Hook: run TSUpdate whenever nvim-treesitter is installed or updated
+vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
+  local name, kind = ev.data.spec.name, ev.data.kind
+  if name == 'nvim-treesitter' and (kind == 'install' or kind == 'update') then
+    if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+    vim.cmd('TSUpdate')
+  end
+end })
+
+
+vim.pack.add({
+  'https://github.com/folke/tokyonight.nvim',
+--  'https://github.com/carlos-algms/agentic.nvim',
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },
+  'https://github.com/ibhagwan/fzf-lua',
+  'https://github.com/nvim-tree/nvim-web-devicons',
+  'https://github.com/github/copilot.vim',
+--  'https://github.com/nvim-lua/popup.nvim',
+-- 'https://github.com/sindrets/diffview.nvim',
+  'https://github.com/lewis6991/gitsigns.nvim',
+--  'https://github.com/mfussenegger/nvim-dap',
+  'https://github.com/voldikss/vim-floaterm',
+  'https://github.com/nvim-neotest/nvim-nio',
+--  'https://github.com/rcarriga/nvim-dap-ui',
+--  'https://github.com/microsoft/vscode-node-debug2',
+  'https://github.com/williamboman/mason.nvim',
+  'https://github.com/williamboman/mason-lspconfig.nvim',
+  'https://github.com/neovim/nvim-lspconfig',
+  'https://github.com/echasnovski/mini.files',
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+require('mini.files').setup({mappings = {go_in_plus = 'l'}})
+--require('cov').setup()
 
 -- vim.g.codeium_enabled = false
 -- vim.g.codeium_disable_bindings = true
@@ -254,7 +122,7 @@ opt.completeopt = {
   'menuone',
   'noselect',
   'popup',
-  'fuzzy'
+  'nearest'
 }
 opt.laststatus = 3
 opt.mouse = 'a'
@@ -555,26 +423,28 @@ vim.treesitter.language.register('cds', {'cds', 'cdl', 'hdbcds'})
 --     }
 -- })
 
+-- valid
 -- mfussenegger/nvim-dap
-local dap = require('dap')
-dap.adapters.node2 = {
-    type = 'executable',
-    command = 'node',
-    args = {
-        os.getenv('HOME') ..
-            '/.local/share/nvim/lazy/vscode-node-debug2/out/src/nodeDebug.js'
-    }
-}
-
-dap.adapters["pwa-node"] = {
-  type = "server",
-  host = "localhost",
-  port = "${port}", --let both ports be the same for now...
-  executable = {
-    command = "node",
-    args = { vim.fn.stdpath('data') .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js", "${port}" },
-  }
-}
+-- local dap = require('dap')
+-- dap.adapters.node2 = {
+--     type = 'executable',
+--     command = 'node',
+--     args = {
+--         os.getenv('HOME') ..
+--             '/.local/share/nvim/site/pack/core/opt/vscode-node-debug2/out/src/nodeDebug.js'
+--     }
+-- }
+--
+-- dap.adapters["pwa-node"] = {
+--   type = "server",
+--   host = "localhost",
+--   port = "${port}", --let both ports be the same for now...
+--   executable = {
+--     command = "node",
+--     args = { vim.fn.stdpath('data') .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js", "${port}" },
+--   }
+-- }
+-- validend
 
 -- for _, language in ipairs({ "typescript", "javascript" }) do
 --   dap.configurations[language] = {
@@ -627,45 +497,47 @@ dap.adapters["pwa-node"] = {
 --  os.getenv('HOME') ..
 --      '/.local/share/nvim/lazy/vscode-node-debug2/out/src/nodeDebug.js'
 -- require('dap').set_log_level('INFO')
-dap.defaults.fallback.terminal_win_cmd = '20split new'
-vim.fn.sign_define('DapBreakpoint',
-                   {text = '🟥', texthl = '', linehl = '', numhl = ''})
-vim.fn.sign_define('DapBreakpointRejected',
-                   {text = '🟦', texthl = '', linehl = '', numhl = ''})
-vim.fn.sign_define('DapStopped',
-                   {text = '⭐️', texthl = '', linehl = '', numhl = ''})
-
-vim.keymap.set('n', '<leader>dh',
-               function() require"dap".toggle_breakpoint() end)
-vim.keymap.set('n', '<leader>dH',
-               ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>")
-vim.keymap.set({'n', 't'}, '<A-k>', function() require"dap".step_out() end)
-vim.keymap.set({'n', 't'}, "<A-l>", function() require"dap".step_into() end)
-vim.keymap.set({'n', 't'}, '<A-j>', function() require"dap".step_over() end)
-vim.keymap.set({'n', 't'}, '<A-h>', function() require"dap".continue() end)
-vim.keymap.set('n', '<leader>dn', function() require"dap".run_to_cursor() end)
-vim.keymap.set('n', '<leader>dc', function() require"dap".terminate() end)
-vim.keymap.set('n', '<leader>dR',
-               function() require"dap".clear_breakpoints() end)
-vim.keymap.set('n', '<leader>de',
-               function() require"dap".set_exception_breakpoints({"all"}) end)
-vim.keymap.set('n', '<leader>da', function() require"debugHelper".attach() end)
-vim.keymap.set('n', '<leader>dA',
-               function() require"debugHelper".attachToRemote() end)
-vim.keymap
-    .set('n', '<leader>di', function() require"dap.ui.widgets".hover() end)
-vim.keymap.set('n', '<leader>d?', function()
-    local widgets = require "dap.ui.widgets";
-    widgets.centered_float(widgets.scopes)
-end)
-vim.keymap.set('n', '<leader>dk', ':lua require"dap".up()<CR>zz')
-vim.keymap.set('n', '<leader>dj', ':lua require"dap".down()<CR>zz')
-vim.keymap.set('n', '<leader>dr',
-               ':lua require"dap".repl.toggle({}, "vsplit")<CR><C-w>l')
-vim.keymap.set('n', '<leader>du', ':lua require"dapui".toggle()<CR>')
-
-vim.keymap.set('n', '<leader>ds', ':FzfLua dap_frames<CR>')
-vim.keymap.set('n', '<leader>db', ':FzfLua dap_breakpoints<CR>')
+-- valid
+-- dap.defaults.fallback.terminal_win_cmd = '20split new'
+-- vim.fn.sign_define('DapBreakpoint',
+--                    {text = '🟥', texthl = '', linehl = '', numhl = ''})
+-- vim.fn.sign_define('DapBreakpointRejected',
+--                    {text = '🟦', texthl = '', linehl = '', numhl = ''})
+-- vim.fn.sign_define('DapStopped',
+--                    {text = '⭐️', texthl = '', linehl = '', numhl = ''})
+--
+-- vim.keymap.set('n', '<leader>dh',
+--                function() require"dap".toggle_breakpoint() end)
+-- vim.keymap.set('n', '<leader>dH',
+--                ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>")
+-- vim.keymap.set({'n', 't'}, '<A-k>', function() require"dap".step_out() end)
+-- vim.keymap.set({'n', 't'}, "<A-l>", function() require"dap".step_into() end)
+-- vim.keymap.set({'n', 't'}, '<A-j>', function() require"dap".step_over() end)
+-- vim.keymap.set({'n', 't'}, '<A-h>', function() require"dap".continue() end)
+-- vim.keymap.set('n', '<leader>dn', function() require"dap".run_to_cursor() end)
+-- vim.keymap.set('n', '<leader>dc', function() require"dap".terminate() end)
+-- vim.keymap.set('n', '<leader>dR',
+--                function() require"dap".clear_breakpoints() end)
+-- vim.keymap.set('n', '<leader>de',
+--                function() require"dap".set_exception_breakpoints({"all"}) end)
+-- vim.keymap.set('n', '<leader>da', function() require"debugHelper".attach() end)
+-- vim.keymap.set('n', '<leader>dA',
+--                function() require"debugHelper".attachToRemote() end)
+-- vim.keymap
+--     .set('n', '<leader>di', function() require"dap.ui.widgets".hover() end)
+-- vim.keymap.set('n', '<leader>d?', function()
+--     local widgets = require "dap.ui.widgets";
+--     widgets.centered_float(widgets.scopes)
+-- end)
+-- vim.keymap.set('n', '<leader>dk', ':lua require"dap".up()<CR>zz')
+-- vim.keymap.set('n', '<leader>dj', ':lua require"dap".down()<CR>zz')
+-- vim.keymap.set('n', '<leader>dr',
+--                ':lua require"dap".repl.toggle({}, "vsplit")<CR><C-w>l')
+-- vim.keymap.set('n', '<leader>du', ':lua require"dapui".toggle()<CR>')
+--
+-- vim.keymap.set('n', '<leader>ds', ':FzfLua dap_frames<CR>')
+-- vim.keymap.set('n', '<leader>db', ':FzfLua dap_breakpoints<CR>')
+-- validend
 
 -- require('nvim-dap-virtual-text').setup()
 
@@ -719,18 +591,12 @@ vim.keymap.set('n', '<leader>db', ':FzfLua dap_breakpoints<CR>')
 -- vim.keymap.set('n', '[b', ':bnext<CR>')
 -- vim.keymap.set('n', ']b', ':bprev<CR>')
 
--- David-Kunz/treesitter-unit
-vim.keymap.set('x', 'u', ':<c-u>lua require"treesitter-unit".select()<CR>')
-vim.keymap.set('o', 'u', ':<c-u>lua require"treesitter-unit".select()<CR>')
-vim.keymap.set('x', 'u', ':<c-u>lua require"treesitter-unit".select(true)<CR>')
-vim.keymap.set('o', 'u', ':<c-u>lua require"treesitter-unit".select(true)<CR>')
--- require"treesitter-unit".enable_highlighting()
-
--- local tunit = require'treesitter-unit'
--- vim.keymap.set('x', 'iu', function() require'treesitter-unit'.select() end)
--- vim.keymap.set('x', 'au', function() require'treesitter-unit'.select(true) end)
--- vim.keymap.set('o', 'iu', function() require'treesitter-unit'.select() end)
--- vim.keymap.set('o', 'au', function() require'treesitter-unit'.select(true) end)
+-- David-Kunz/treesitter-unit (local dev, opt-loaded)
+vim.cmd.packadd('treesitter-unit')
+vim.keymap.set('x', 'iu', function() require'treesitter-unit'.select() end)
+vim.keymap.set('o', 'iu', function() require'treesitter-unit'.select() end)
+vim.keymap.set('o', 'u',  function() require'treesitter-unit'.select(true) end)
+vim.keymap.set('n', 'vu', function() require'treesitter-unit'.select(true) end)
 
 -- custom folder icon
 -- require'nvim-web-devicons'.setup({
@@ -979,37 +845,6 @@ vim.keymap.set('n', '<c-i>', '<c-i>zz')
 -- vim.keymap.set('n', '<leader>ls',
 --                '<cmd>source ~/.config/nvim/after/plugin/luasnip.lua<CR>')
 --
-_G.test_dap = function()
-    local dap = require 'dap'
-    -- dap.terminate(nil, nil, function()
-    --   vim.wait(2000, function()
-    --     local session = dap.session()
-    --     return session and session.initialized
-    --   end)
-    -- dap.run({
-    --   console = "integratedTerminal",
-    --   cwd = "/Users/d065023/tmp/node-test",
-    --   disableOptimisticBPs = true,
-    --   port = 9229,
-    --   protocol = "inspector",
-    --   request = "launch",
-    --   runtimeArgs = { "--inspect-brk", "plain.js" },
-    --   type = "pwa-node"
-    --   })
-    -- end)
-    dap.run({
-        type = 'pwa-node',
-        request = 'launch',
-        cwd = '/Users/d065023/tmp/node-test',
-        rootPath = '/Users/d065023/tmp/node-test',
-        runtimeArgs = {
-            '--inspect-brk', './node_modules/.bin/jest', '--no-coverage', '-t',
-            '^foo$', '--', 'sample.test.js'
-        },
-        args = {'--no-cache'},
-        console = 'integratedTerminal'
-    })
-end
 
 -- ldelossa/gh.nvim
 -- require('litee.lib').setup()
@@ -1023,7 +858,7 @@ end
 
 -- vim.keymap.set('i', '<c-o>', '<esc><s-o>')
 -- use option shift o instead
-vim.keymap.set('n', '<leader>p', ':Lazy<CR>')
+vim.keymap.set('n', '<leader>p', ':lua vim.pack.update()<CR>')
 -- vim.api.nvim_create_autocmd('BufHidden',  {
 --     pattern  = '[dap-terminal]*',
 --     callback = function(arg)
@@ -1031,20 +866,22 @@ vim.keymap.set('n', '<leader>p', ':Lazy<CR>')
 --     end
 -- })
 
-vim.keymap.set('n', '<leader>?',
-               'orequire("/usr/local/lib/node_modules/derive-type/")(...arguments)<esc>')
+--vim.keymap.set('n', '<leader>?',
+--               'orequire("/usr/local/lib/node_modules/derive-type/")(...arguments)<esc>')
 
-local dap = require("dap")
-local dapui = require("dapui")
-dapui.setup()
-vim.keymap.set('n', '<leader>do', function() require("dapui").open() end)
-vim.keymap.set('n', '<leader>dC', function() require("dapui").close() end)
--- dap.listeners.after.event_initialized["dapui_config"] = function()
---   dapui.open()
--- end
-dap.listeners.before.event_terminated["dapui_config"] =
-    function() dapui.close() end
-dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+-- valid
+-- local dap = require("dap")
+-- local dapui = require("dapui")
+-- dapui.setup()
+-- vim.keymap.set('n', '<leader>do', function() require("dapui").open() end)
+-- vim.keymap.set('n', '<leader>dC', function() require("dapui").close() end)
+-- -- dap.listeners.after.event_initialized["dapui_config"] = function()
+-- --   dapui.open()
+-- -- end
+-- dap.listeners.before.event_terminated["dapui_config"] =
+--     function() dapui.close() end
+-- dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+-- validend
 
 require('mason').setup()
 require("mason-lspconfig").setup()
@@ -1087,8 +924,7 @@ require("mason-lspconfig").setup()
 --     end
 -- }
 -- typescript.inlayHints.parameterNames.enabled
-vim.keymap.set({'n', 'v'}, '<leader>]', ':Gen<CR>')
-vim.keymap.set('n', '<leader>[', ':Gen Chat<CR>')
+
 
 -- vim.api.nvim_create_autocmd("CursorHold", {callback = vim.lsp.buf.document_highlight})
 -- vim.api.nvim_create_autocmd("CursorMoved", {callback = vim.lsp.buf.clear_references})
@@ -1147,61 +983,13 @@ vim.keymap.set('n', '<leader>[', ':Gen Chat<CR>')
 --
 --
 --
--- require('gen').model = 'zephyr'
--- require('gen').model = 'openhermes2.5-mistral'
-require('gen').prompts['Gen_Code'] = { 
-  prompt = "Generate the following $filetype code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```, $input",
-  replace = true,
-  extract = "```$filetype\n(.-)```",
-  model = "qwen2.5-coder:14b"
-}
-
-require('gen').prompts['Code_Completion'] = { 
-  prompt = function()
-    local row, col = unpack(vim.api.nvim_win_get_cursor(0))
-    local before = vim.api.nvim_buf_get_text(0, 0, 0, row-1, col+1, {})
-    local after = vim.api.nvim_buf_get_text(0, row-1, col+1, -1, -1, {})
-    local prompt = '<|fim_prefix|>' .. table.concat(before, "\n") .. '<|fim_suffix|>' .. table.concat(after, "\n") .. '<|fim_middle|>only output the middle part, not the prefix/suffix, nothing else, just the missing code in between, do not repeate the provided text, include the $filetype code fence ```$filetype\n<resulting code>\n``` for example ```$filetype\nconsole.log("hello")\n```'
-    return prompt
-  end,
-  -- model = "qwen2.5-coder:32b",
-  extract = "```$filetype\n(.-)```"
-}
---vim.keymap.set('i', '<c-]>', '<esc>:Gen Code_Completion<CR>')
-
--- require('gen').prompts['Yi_Code_Explain'] = { 
---   prompt = "Explain the following $filetype code:\n\n $text",
---   model = "yi-coder"
--- }
-require('gen').prompts['hidden'] = { 
-  -- prompt = "Compare the following two texts:\n# Text 1:\n$register_a\n\n# Text2:\n$register_b",
-  prompt = function()
-    return "What is 1 + 1?"
-  end
-}
--- require('gen').prompts['Fix_Code'] = {
---   prompt = "Fix the following code. Only ouput the result in format ```$filetype\n...\n```:\n```$filetype\n$text\n```",
---   replace = true,
---   extract = "```$filetype\n(.-)```"
-
-require("diffview").setup({use_icons = false})
-
-vim.api.nvim_create_user_command("ChangeModel", function()
-    vim.ui.input({prompt = "Enter new model: "}, function(input)
-        if input and input ~= "" then
-            require("gen").model = input
-            print("Model changed to: " .. input)
-        else
-            print("No model name provided. Model not changed.")
-        end
-    end)
-end, {})
+-- require("diffview").setup({use_icons = false})
 
 -- vim.keymap.set('n', '<leader>h', function()
 --     vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 -- end)
 
-vim.keymap.set('n', '<leader>D', ':DiffviewOpen main<CR>')
+-- vim.keymap.set('n', '<leader>D', ':DiffviewOpen main<CR>')
 
 
 vim.cmd('abb genuuid1 a11fb6f1-36ab-46ec-b00c-d379031e817a')
@@ -1354,4 +1142,63 @@ vim.cmd [[hi @function.method.call guibg=#1f2b2d]]
 --
 
 vim.cmd[[colorscheme tokyonight]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Hook: run build for vscode-node-debug2 on install/update
+-- valid
+-- vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
+--   local name, kind = ev.data.spec.name, ev.data.kind
+--   if name == 'vscode-node-debug2' and (kind == 'install' or kind == 'update') then
+--     local plug_dir = vim.fn.stdpath('data') .. '/site/pack/core/opt/vscode-node-debug2'
+--     vim.fn.jobstart(
+--       'npm install && NODE_OPTIONS=--no-experimental-fetch npm run build',
+--       { cwd = plug_dir }
+--     )
+--   end
+-- end })
+--validend
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+require("vim._core.ui2").enable({})
+
+
+
+
+
+
 
