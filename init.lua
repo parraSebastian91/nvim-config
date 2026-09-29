@@ -32,18 +32,22 @@ vim.pack.add({
   'https://github.com/echasnovski/mini.files',
   'https://github.com/nvim-tree/nvim-tree.lua',
   'https://github.com/romgrk/barbar.nvim',
+  'https://github.com/nvim-lualine/lualine.nvim',
+  'https://github.com/folke/which-key.nvim',
 })
 
 -- ── Opciones ─────────────────────────────────────────────────────────────
 opt.completeopt = { 'menu', 'menuone', 'noselect', 'popup', 'nearest' }
-opt.laststatus = 0
+opt.laststatus = 3 -- una sola barra de estado abajo
 opt.mouse = 'a'
 opt.splitright = true
 opt.splitbelow = true
 opt.expandtab = true
 opt.tabstop = 2
 opt.shiftwidth = 2
-opt.number = false
+opt.number = true
+opt.cursorline = true
+opt.scrolloff = 8
 opt.ignorecase = true
 opt.smartcase = true
 opt.signcolumn = 'yes'
@@ -56,10 +60,7 @@ g.netrw_liststyle = 3
 g.markdown_recommended_style = 0
 g.markdown_fenced_languages = { 'javascript', 'js=javascript', 'json=javascript', 'typescript', 'go', 'rust' }
 
-opt.fillchars = {
-  horiz = '█', horizup = '█', horizdown = '█', vert = '█',
-  vertleft = '█', vertright = '█', verthoriz = '█', fold = ' ',
-}
+opt.fillchars = { fold = ' ' }
 
 -- folds por treesitter
 vim.o.foldenable = true
@@ -144,6 +145,15 @@ require('nvim-tree').setup({
   view = { width = 30 },
   filters = { dotfiles = false },
 })
+-- el arbol se abre solo al iniciar (sin quitarte el foco del archivo)
+vim.api.nvim_create_autocmd('VimEnter', { callback = function()
+  local api = require('nvim-tree.api')
+  if not api.tree.is_visible() then api.tree.toggle({ focus = false, find_file = true }) end
+end })
+-- barra de estado y ayuda de atajos (pulsa <leader> y espera, o <leader>?)
+require('lualine').setup({ options = { theme = 'auto', globalstatus = true } })
+require('which-key').setup({ delay = 300 })
+map('n', '<leader>?', function() require('which-key').show({ global = false }) end, { desc = 'Atajos del buffer' })
 map('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
 map('n', '<leader>E', ':NvimTreeFindFile<CR>', { silent = true })
 

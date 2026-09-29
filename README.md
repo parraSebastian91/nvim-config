@@ -5,7 +5,7 @@ Configuración de Neovim para **TypeScript (Angular, NestJS)**, **Go** y **Rust*
 - Requiere **Neovim ≥ 0.12** (usa `vim.pack`, `vim.lsp.config` y `vim.lsp.enable`).
 - LSP: `ts_ls`, `angularls`, `eslint`, `html`, `cssls`, `jsonls`, `yamlls`, `gopls`, `rust_analyzer`, `taplo`, `lua_ls` (Mason los instala solos).
 - Formato al guardar con `conform.nvim`: prettier (web), goimports + gofmt (Go), rustfmt (Rust), stylua (Lua).
-- Árbol lateral (nvim-tree), pestañas (barbar), treesitter (rama `main`), fzf-lua, gitsigns, mini.files, lazygit (floaterm), Copilot.
+- Árbol lateral (nvim-tree), pestañas (barbar), treesitter (rama `main`), fzf-lua, lualine (barra de estado), which-key, gitsigns, mini.files, lazygit (floaterm), Copilot.
 
 ## Estructura
 
@@ -136,6 +136,32 @@ npm install -g tree-sitter-cli
 5. Para Copilot, ejecuta `:Copilot setup`.
 
 Mason instala `gopls` y `goimports` solo si `go` está en el `PATH`. Para los servidores de Node hace falta `npm`.
+
+## Aprender Neovim
+
+1. Ejecuta `:Tutor` dentro de nvim: es el tutorial interactivo oficial y dura unos 30 minutos.
+2. Pulsa `<leader>` (la barra espaciadora) y espera un momento: which-key muestra los atajos disponibles. `<leader>?` muestra los del buffer actual.
+3. `:help <tema>` abre la ayuda (por ejemplo `:help motion`). `<leader>ff` busca texto en el proyecto.
+
+**Modos.** Neovim tiene modos: en *normal* (el de inicio) las teclas son comandos y en *insert* escribes texto.
+
+| Tecla | Acción |
+|---|---|
+| `i` / `a` / `o` | entrar en insert (antes del cursor / después / línea nueva) |
+| `Esc` | volver a normal |
+| `v` / `V` | seleccionar (por caracteres / por líneas) |
+| `h j k l` | mover (← ↓ ↑ →); las flechas también funcionan |
+| `w` / `b` / `0` / `$` | palabra siguiente / anterior / inicio / fin de línea |
+| `gg` / `G` | inicio / fin del archivo |
+| `dd` / `yy` / `p` | cortar línea / copiar línea / pegar |
+| `ciw` | cambiar la palabra bajo el cursor |
+| `u` / `Ctrl-r` | deshacer / rehacer |
+| `/texto` `n` | buscar y siguiente resultado |
+| `:w` / `:q` / `:wq` | guardar / salir / ambos (`<leader>w` también guarda) |
+
+**Moverse entre paneles.** `Ctrl-w h/j/k/l` cambia de panel (árbol ↔ editor). Con el cursor en el árbol, `Enter` abre un archivo, `a` crea, `d` borra, `r` renombra y `?` muestra su ayuda.
+
+**Ejercicio sugerido para el primer día:** abre un proyecto (`nvim .`), busca un archivo con `<leader><space>`, salta a una definición con `gd`, vuelve con `Ctrl-o` y renombra un símbolo con `grn`.
 
 ## Uso por lenguaje
 
