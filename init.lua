@@ -3,6 +3,8 @@ local opt, g, map = vim.opt, vim.g, vim.keymap.set
 local is_win = vim.fn.has('win32') == 1
 
 g.mapleader = ' '
+g.loaded_netrw = 1 -- nvim-tree reemplaza a netrw
+g.loaded_netrwPlugin = 1
 
 -- ── Plugins ──────────────────────────────────────────────────────────────
 -- treesitter: correr :TSUpdate al instalar/actualizar
@@ -28,6 +30,8 @@ vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig',
   'https://github.com/stevearc/conform.nvim',
   'https://github.com/echasnovski/mini.files',
+  'https://github.com/nvim-tree/nvim-tree.lua',
+  'https://github.com/romgrk/barbar.nvim',
 })
 
 -- ── Opciones ─────────────────────────────────────────────────────────────
@@ -99,7 +103,7 @@ end })
 -- ── Keymaps generales ────────────────────────────────────────────────────
 map('n', '<leader>v', ':e $MYVIMRC<CR>')
 map('n', '<leader>w', ':w<CR>')
-map('n', '<leader>q', ':bd!<CR>')
+map('n', '<leader>q', '<Cmd>BufferClose<CR>') -- pregunta si hay cambios sin guardar
 map('n', '<leader><esc><esc>', ':tabclose<CR>')
 map('n', '<leader>p', function() vim.pack.update() end)
 map('n', '<leader>n', function()
@@ -131,6 +135,37 @@ map('n', '\\', function()
     MiniFiles.open(vim.fn.filereadable(name) == 1 and name or vim.fn.getcwd())
   end
 end, { silent = true })
+
+-- ── Arbol lateral (nvim-tree) y pestañas (barbar) ────────────────────────
+require('nvim-tree').setup({
+  hijack_cursor = true,
+  update_focused_file = { enable = true }, -- resalta el archivo actual
+  renderer = { group_empty = true },
+  view = { width = 30 },
+  filters = { dotfiles = false },
+})
+map('n', '<leader>e', ':NvimTreeToggle<CR>', { silent = true })
+map('n', '<leader>E', ':NvimTreeFindFile<CR>', { silent = true })
+
+require('barbar').setup({
+  animation = true,
+  clickable = true,
+  focus_on_close = 'left',
+  icons = {
+    gitsigns = { added = { enabled = true }, changed = { enabled = true }, deleted = { enabled = true } },
+    diagnostics = { [vim.diagnostic.severity.ERROR] = { enabled = true } },
+  },
+  maximum_length = 30,
+  sidebar_filetypes = { NvimTree = true }, -- la pestaña no se corre bajo el arbol
+})
+map('n', '<A-,>', '<Cmd>BufferPrevious<CR>')
+map('n', '<A-.>', '<Cmd>BufferNext<CR>')
+map('n', '<A-<>', '<Cmd>BufferMovePrevious<CR>')
+map('n', '<A->>', '<Cmd>BufferMoveNext<CR>')
+map('n', '<A-p>', '<Cmd>BufferPin<CR>')
+map('n', '<leader>bb', '<Cmd>BufferPick<CR>')
+map('n', '<leader>bo', '<Cmd>BufferCloseAllButCurrentOrPinned<CR>')
+for i = 1, 9 do map('n', '<A-' .. i .. '>', '<Cmd>BufferGoto ' .. i .. '<CR>') end
 
 -- ── gitsigns ─────────────────────────────────────────────────────────────
 require('gitsigns').setup({

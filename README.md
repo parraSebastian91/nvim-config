@@ -5,7 +5,7 @@ Configuración de Neovim para **TypeScript (Angular, NestJS)**, **Go** y **Rust*
 - Requiere **Neovim ≥ 0.12** (usa `vim.pack`, `vim.lsp.config` y `vim.lsp.enable`).
 - LSP: `ts_ls`, `angularls`, `eslint`, `html`, `cssls`, `jsonls`, `yamlls`, `gopls`, `rust_analyzer`, `taplo`, `lua_ls` (Mason los instala solos).
 - Formato al guardar con `conform.nvim`: prettier (web), goimports + gofmt (Go), rustfmt (Rust), stylua (Lua).
-- Treesitter (rama `main`), fzf-lua, gitsigns, mini.files, lazygit (floaterm), Copilot.
+- Árbol lateral (nvim-tree), pestañas (barbar), treesitter (rama `main`), fzf-lua, gitsigns, mini.files, lazygit (floaterm), Copilot.
 
 ## Estructura
 
@@ -161,7 +161,7 @@ Mason instala `gopls` y `goimports` solo si `go` está en el `PATH`. Para los se
 | `<c-y>` | terminal por directorio |
 | `<leader>hs`, `hr`, `hp`, `hb`, `hd` | gitsigns (stage, reset, preview, blame, diff) |
 | `]c` / `[c` | siguiente / anterior hunk |
-| `<leader>q` | cerrar buffer (forzado) |
+| `<leader>q` | cerrar pestaña (pregunta si hay cambios) |
 | `<leader>p` | actualizar plugins |
 
 ## SAP CDS (opcional)
