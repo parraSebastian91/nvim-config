@@ -151,7 +151,11 @@ Mason instala `gopls` y `goimports` solo si `go` está en el `PATH`. Para los se
 | `<leader><space>` / `<leader>ff` | buscar archivos / live grep |
 | `<leader>fs` / `<leader>fS` | símbolos del documento / del workspace |
 | `<leader>fx` | diagnósticos del workspace |
-| `\` | explorador (mini.files) |
+| `<leader>e` / `<leader>E` | árbol lateral (nvim-tree) / localizar el archivo actual en el árbol |
+| `\` | explorador flotante (mini.files) |
+| `<A-,>` / `<A-.>` | pestaña anterior / siguiente (barbar) |
+| `<A-1>` … `<A-9>` | ir a la pestaña N |
+| `<A-p>` / `<leader>bb` / `<leader>bo` | fijar pestaña / elegir pestaña / cerrar las demás |
 | `gd` / `gi` / `gy` | definición / implementación / tipo |
 | `K` / `grr` / `grn` / `gra` / `gO` | hover / referencias / rename / code action / símbolos |
 | `]d` / `[d` | siguiente / anterior diagnóstico |
